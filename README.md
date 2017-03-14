@@ -19,7 +19,7 @@ Like this:
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.github.sentsent:GmailAccessTokenReceiver:1.0'
+    compile 'com.github.sentsent:GmailAccessTokenRetriever:1.0'
     testCompile 'junit:junit:4.12'
 }
 ```
