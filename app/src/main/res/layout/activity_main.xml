@@ -7,8 +7,6 @@
         <variable
             name="connectionViewModel"
             type="pl.sentia.gmailaccesstokenretriever.viewmodel.ConnectionResultsViewModel" />
-
-        <import type="pl.sentia.gmailaccesstokenretriever.Answers"/>
     </data>
 
     <LinearLayout
