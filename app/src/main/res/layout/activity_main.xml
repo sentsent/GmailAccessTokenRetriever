@@ -7,6 +7,8 @@
         <variable
             name="connectionViewModel"
             type="pl.sentia.gmailaccesstokenretriever.viewmodel.ConnectionResultsViewModel" />
+
+        <import type="pl.sentia.gmailaccesstokenretriever.Answers"/>
     </data>
 
     <LinearLayout
@@ -36,7 +38,7 @@
             android:id="@+id/connection_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{connectionViewModel.isConnectedInWords()}"
+            android:text="@{connectionViewModel.connected ? @string/yes : @string/no}"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12dp" />
 
