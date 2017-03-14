@@ -13,13 +13,13 @@ allprojects {
 ```
 
 
-Add "compile 'com.github.sentsent:GmailAccessTokenRetriever:1.0'" to app build.gradle in dependencies block.
+Add "compile 'com.github.sentsent:GmailAccessTokenRetriever:master-SNAPSHOT''" to app build.gradle in dependencies block.
 Like this:
 ```
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.github.sentsent:GmailAccessTokenRetriever:1.0'
+    compile 'com.github.sentsent:GmailAccessTokenRetriever:master-SNAPSHOT'
     testCompile 'junit:junit:4.12'
 }
 ```
