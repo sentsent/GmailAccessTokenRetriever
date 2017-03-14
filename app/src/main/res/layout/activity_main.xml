@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="connectionViewModel"
+            type="pl.sentia.gmailaccesstokenretriever.viewmodel.ConnectionResultsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp"
+        tools:context="pl.sentia.gmailaccesstokenretriever.MainActivity">
+
+        <Button
+            android:id="@+id/connectBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> connectionViewModel.connect()}"
+            android:text="@string/connect"/>
+
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connection_status"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/connection_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{connectionViewModel.isConnectedInWords()}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/token_trim"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/token"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/connection_status"
+            android:maxLength="10"
+            android:text="@{connectionViewModel.obtainedToken}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+</layout>

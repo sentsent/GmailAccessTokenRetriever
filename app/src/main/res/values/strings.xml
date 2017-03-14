@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GmailAccessTokenRetriever</string>
+    <string name="connection_status">Connected?</string>
+    <string name="token_trim">First 10 token\'s chars:</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="connect">Connect</string>
+</resources>
