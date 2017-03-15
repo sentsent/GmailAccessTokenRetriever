@@ -24,6 +24,7 @@ public class RetrieveTokenTask extends AsyncTask<Account, Void, Void> {
 
     private ConnectionResultsViewModel connectionViewModel;
     private static final int RC_AUTHORIZE_CONTACTS = 500;
+    private static final String CONTACTS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
     public String resultToken;
 
     public RetrieveTokenTask(ConnectionResultsViewModel connectionViewModel) {
@@ -53,13 +54,14 @@ public class RetrieveTokenTask extends AsyncTask<Account, Void, Void> {
 
     private void getGoogleApiClient() {
         if (GOOGLE_API_CLIENT == null) {
-            GoogleSignInOptions gso =
-                    new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-                            .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
+            GoogleSignInOptions googleSignInOptions =
+                    new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestEmail()
+                            .requestScopes(new Scope(CONTACTS_SCOPE))
                             .build();
 
             GOOGLE_API_CLIENT = new GoogleApiClient.Builder(MainActivity.CURRENT_ACTIVITY)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
                     .build();
 
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(GOOGLE_API_CLIENT);
@@ -81,12 +83,8 @@ public class RetrieveTokenTask extends AsyncTask<Account, Void, Void> {
     }
 
     private void obtainGmailToken(Account account) {
-        GoogleAccountCredential credential =
-                GoogleAccountCredential.usingOAuth2(
-                        MainActivity.CURRENT_ACTIVITY,
-                        Collections.singleton(
-                                "https://www.googleapis.com/auth/contacts.readonly")
-                );
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                        MainActivity.CURRENT_ACTIVITY, Collections.singleton(CONTACTS_SCOPE));
         credential.setSelectedAccount(account);
         try {
             resultToken = credential.getToken();

@@ -30,5 +30,8 @@ dependencies {
     compile('com.google.apis:google-api-services-gmail:v1-rev62-1.22.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+    compile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
+
     testCompile 'junit:junit:4.12'
+
 }
