@@ -8,6 +8,8 @@ import android.os.Bundle;
 import pl.sentia.gmailaccesstokenretriever.databinding.ActivityMainBinding;
 import pl.sentia.gmailaccesstokenretriever.model.ConnectionResults;
 import pl.sentia.gmailaccesstokenretriever.viewmodel.ConnectionResultsViewModel;
+import pl.sentia.gmailaccesstokenretriever.viewmodel.GoogleTokenService;
+import pl.sentia.gmailaccesstokenretriever.viewmodel.TokenService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,9 +35,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        connectionViewModel.AUTHORISED_ACCOUNT = RetrieveTokenTask.getAuthorisedAccount(requestCode, data);
-        connectionViewModel.connect();
+        TokenService googleTokenService = GoogleTokenService.getInstance();
+        if (requestCode == GoogleTokenService.RC_AUTHORIZE_CONTACTS) {
+            super.onActivityResult(requestCode, resultCode, data);
+            googleTokenService.updateCredential(data);
+            googleTokenService.putTokenIntoConnectionModel();
+        }
     }
+
+
 
 }
