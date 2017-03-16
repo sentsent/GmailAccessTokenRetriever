@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
 import pl.sentia.gmailaccesstokenretriever.databinding.ActivityMainBinding;
 import pl.sentia.gmailaccesstokenretriever.model.ConnectionResults;
 import pl.sentia.gmailaccesstokenretriever.viewmodel.ConnectionResultsViewModel;
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
             googleTokenService.updateCredential(data);
             googleTokenService.runTokenRetrieveTask();
-
         }
     }
 

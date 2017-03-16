@@ -13,15 +13,9 @@ import com.google.android.gms.common.api.Scope;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
-import dagger.Module;
 import pl.sentia.gmailaccesstokenretriever.MainActivity;
-
 import static pl.sentia.gmailaccesstokenretriever.MainActivity.CONNECTION_VIEW_MODEL;
 
-@Module
 public class GoogleTokenService implements TokenService {
 
     public static final int RC_AUTHORIZE_CONTACTS = 500;
