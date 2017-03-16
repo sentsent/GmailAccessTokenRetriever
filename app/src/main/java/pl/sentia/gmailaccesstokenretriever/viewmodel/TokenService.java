@@ -3,6 +3,6 @@ package pl.sentia.gmailaccesstokenretriever.viewmodel;
 import android.content.Intent;
 
 public interface TokenService {
-    void putTokenIntoConnectionModel();
+    void runTokenRetrieveTask();
     void updateCredential(Intent data);
 }

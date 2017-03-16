@@ -2,6 +2,7 @@ package pl.sentia.gmailaccesstokenretriever.viewmodel;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.api.Auth;
@@ -12,17 +13,31 @@ import com.google.android.gms.common.api.Scope;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import dagger.Module;
 import pl.sentia.gmailaccesstokenretriever.MainActivity;
 
+import static pl.sentia.gmailaccesstokenretriever.MainActivity.CONNECTION_VIEW_MODEL;
+
+@Module
 public class GoogleTokenService implements TokenService {
 
-    private static TokenService service;
-    private GoogleApiClient googleApiClient;
-    public GoogleAccountCredential credential;
-    private static final String CONTACTS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
     public static final int RC_AUTHORIZE_CONTACTS = 500;
+    private static final GoogleTokenService INSTANCE = new GoogleTokenService();
+    private static final String CONTACTS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
+    public GoogleAccountCredential credential;
+    private GoogleApiClient googleApiClient;
 
     private GoogleTokenService() {
+    }
+
+    public static GoogleTokenService getInstance() {
+        return INSTANCE;
+    }
+
+    public void authorise() {
         googleApiClient = new GoogleApiClient.Builder(MainActivity.CURRENT_ACTIVITY)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
@@ -35,30 +50,21 @@ public class GoogleTokenService implements TokenService {
                         MainActivity.CURRENT_ACTIVITY,
                         Collections.singleton(CONTACTS_SCOPE));
 
-        authorise();
-    }
-
-    public static synchronized TokenService getInstance() {
-        if (service == null) {
-            service = new GoogleTokenService();
-        }
-        return service;
-    }
-
-    private void authorise() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         MainActivity.CURRENT_ACTIVITY.startActivityForResult(signInIntent, RC_AUTHORIZE_CONTACTS);
     }
 
     @Override
-    public void putTokenIntoConnectionModel() {
-        AsyncTask<ConnectionResultsViewModel, Void, ConnectionViewTokenHolder> task
-                = new AsyncTask<ConnectionResultsViewModel, Void, ConnectionViewTokenHolder>() {
-            @Override
-            protected ConnectionViewTokenHolder doInBackground(ConnectionResultsViewModel... params) {
-                String resultToken = null;
-                ConnectionResultsViewModel connectionResultsViewModel = params[0];
+    public void runTokenRetrieveTask() {
+        getTokenTask().execute();
+    }
 
+    @NonNull
+    private AsyncTask<Void, Void, String> getTokenTask() {
+        return new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String resultToken = null;
                 if (credential != null && credential.getSelectedAccountName() != null) {
                     try {
                         resultToken = credential.getToken();
@@ -68,20 +74,14 @@ public class GoogleTokenService implements TokenService {
                         Log.i("GoogleTokenService", "Authentication problem: " + e.getMessage());
                     }
                 }
-
-                ConnectionViewTokenHolder connectionViewTokenHolder = new ConnectionViewTokenHolder();
-                connectionViewTokenHolder.connectionResultsViewModel = connectionResultsViewModel;
-                connectionViewTokenHolder.token = resultToken;
-
-                return connectionViewTokenHolder;
+                return resultToken;
             }
 
             @Override
-            protected void onPostExecute(ConnectionViewTokenHolder connectionViewTokenHolder) {
-                connectionViewTokenHolder.connectionResultsViewModel.updateViewModel(connectionViewTokenHolder.token);
+            protected void onPostExecute(String token) {
+                CONNECTION_VIEW_MODEL.updateViewModel(token);
             }
         };
-        task.execute();
     }
 
     public void updateCredential(Intent data) {
@@ -91,10 +91,4 @@ public class GoogleTokenService implements TokenService {
             credential.setSelectedAccount(result.getSignInAccount().getAccount());
         }
     }
-
-    private class ConnectionViewTokenHolder {
-        public String token;
-        public ConnectionResultsViewModel connectionResultsViewModel;
-    }
-
 }

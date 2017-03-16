@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
 import pl.sentia.gmailaccesstokenretriever.databinding.ActivityMainBinding;
 import pl.sentia.gmailaccesstokenretriever.model.ConnectionResults;
 import pl.sentia.gmailaccesstokenretriever.viewmodel.ConnectionResultsViewModel;
@@ -14,7 +16,7 @@ import pl.sentia.gmailaccesstokenretriever.viewmodel.TokenService;
 public class MainActivity extends AppCompatActivity {
 
     public static Activity CURRENT_ACTIVITY;
-    private ConnectionResultsViewModel connectionViewModel;
+    public static ConnectionResultsViewModel CONNECTION_VIEW_MODEL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
         ConnectionResults connectionResults = new ConnectionResults();
 
         //ViewModel
-        connectionViewModel = new ConnectionResultsViewModel(connectionResults);
+        CONNECTION_VIEW_MODEL = new ConnectionResultsViewModel(connectionResults);
 
         //Binding View to ViewModel
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        activityMainBinding.setConnectionViewModel(connectionViewModel);
+        activityMainBinding.setConnectionViewModel(CONNECTION_VIEW_MODEL);
 
     }
 
@@ -39,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == GoogleTokenService.RC_AUTHORIZE_CONTACTS) {
             super.onActivityResult(requestCode, resultCode, data);
             googleTokenService.updateCredential(data);
-            googleTokenService.putTokenIntoConnectionModel();
+            googleTokenService.runTokenRetrieveTask();
+
         }
     }
 
